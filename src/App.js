@@ -15,6 +15,7 @@ class App extends React.Component{
     p2CPU:true,
     gamesPlayed:0,
     gamesDrawn:0,
+    reveal: true,
     player1: {
       pick:null,
       gamesWon:0, 
@@ -87,24 +88,27 @@ class App extends React.Component{
   //FUNCTION BLOCK
   
   getPick=(pick)=>{
-    
     if (this.state.p1Turn){
-      this.setState({ player1: {...this.state.player1, pick: pick} })
-      this.setState({p1Turn: !this.state.p1Turn})
-      if(this.state.p2CPU){
-        // get a random cpu pick
-        this.setState({ player2: {...this.state.player2, pick: Math.floor(Math.random()*Math.floor(3))}})
-        // gameLoop()
+      if (this.state.p2CPU){
+        this.setState({ 
+          p1Turn: !this.state.p1Turn,
+          player1: {...this.state.player1, pick: pick},
+          player2: {...this.state.player2, pick: Math.floor(Math.random()*Math.floor(3))}})
+
+          this.setState({reveal:true}, () => this.gameLoop())
+      } else {
+        this.setState({ 
+          p1Turn: !this.state.p1Turn,
+          player1: {...this.state.player1, pick: pick},
+        })
       }
       } else {
-        this.setState({ player2: {...this.state.player2, pick: pick} })
-        // gameLoop()
-      }
+        this.setState({ player2: {...this.state.player2, pick: pick} }, () => this.gameLoop())
+    }
   }
       
 
   gameLoop = () => {
-    debugger
     let p1_GamesWon = this.state.player1.gamesWon
     let p2_GamesWon = this.state.player2.gamesWon
     let gamesDrawn = this.state.gamesDrawn
@@ -147,9 +151,10 @@ class App extends React.Component{
     this.setState({ 
       gamesPlayed: gamesPlayed, 
       gamesDrawn: gamesDrawn,
+      reveal: true,
       p1Turn: true,
-      player1: {...this.state.player1, pick: null, gamesWon: p1_GamesWon, winRatio: p1_WinRatio},
-      player2: {...this.state.player2, pick: null, gamesWon: p2_GamesWon, winRatio: p2_WinRatio},
+      player1: {...this.state.player1, gamesWon: p1_GamesWon, winRatio: p1_WinRatio},
+      player2: {...this.state.player2, gamesWon: p2_GamesWon, winRatio: p2_WinRatio},
     })
   }
 
