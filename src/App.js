@@ -15,7 +15,7 @@ class App extends React.Component{
     p2CPU:true,
     gamesPlayed:0,
     gamesDrawn:0,
-    reveal: true,
+    message: "",
     player1: {
       pick:null,
       gamesWon:0, 
@@ -65,16 +65,19 @@ class App extends React.Component{
         <Segment>
               <Grid columns={2} relaxed="very">
                 <GridColumn>
-                  <Image src={this.state.images[this.state.player1.pick]} size='medium' centered/>
+                  <Image src={this.state.images[this.state.player1.pick]} size='small' centered/>
                 </GridColumn>
                 <GridColumn>
-                  <Image src={this.state.images[this.state.player2.pick]} size='medium' centered/>
+                  <Image src={this.state.images[this.state.player2.pick]} size='small' centered/>
                 </GridColumn>
               </Grid>
               <Divider vertical>VS</Divider>
         </Segment>
+        <Segment textAlign='center'>{this.state.message}</Segment>
         <Segment textAlign='center'>
+          1 Player
           <Checkbox toggle onClick={() => this.toggleCPU()}/>
+          2 Players
           <Button.Group>
             <Button onClick={() => this.getPick(0)}><Icon className="hand rock"/>Rock</Button>
             <Button onClick={() => this.getPick(1)}><Icon className="hand paper"/>Paper</Button>
@@ -112,34 +115,45 @@ class App extends React.Component{
     let p1_GamesWon = this.state.player1.gamesWon
     let p2_GamesWon = this.state.player2.gamesWon
     let gamesDrawn = this.state.gamesDrawn
+    let winMessage = ""
 
     if (this.state.player1.pick === 0 && this.state.player2.pick === 1){
       // p1 loses
       p2_GamesWon++;
+      winMessage = "Player 2 Wins!"
 
     } else if (this.state.player1.pick === 0 && this.state.player2.pick === 2){
       // p1 wins
       p1_GamesWon++;
+      winMessage = "Player 1 Wins!"
+
 
     } else if (this.state.player1.pick === 1 && this.state.player2.pick === 0){
       // p1 wins
       p1_GamesWon++;
+      winMessage = "Player 1 Wins!"
 
     } else if (this.state.player1.pick === 1 && this.state.player2.pick === 2){
       // p1 loses
       p2_GamesWon++;
+      winMessage = "Player 2 Wins!"
+
     
     } else if (this.state.player1.pick === 2 && this.state.player2.pick === 0){
       // p1 loses
       p2_GamesWon++;
+      winMessage = "Player 2 Wins!"
+
     
     }else if (this.state.player1.pick === 2 && this.state.player2.pick === 1){
       // p1 wins
       p1_GamesWon++;
+      winMessage = "Player 1 Wins!"
 
     } else {
       // draw
       gamesDrawn++;
+      winMessage = "Draw!"
 
     }
 
@@ -151,8 +165,8 @@ class App extends React.Component{
     this.setState({ 
       gamesPlayed: gamesPlayed, 
       gamesDrawn: gamesDrawn,
-      reveal: true,
       p1Turn: true,
+      message: winMessage,
       player1: {...this.state.player1, gamesWon: p1_GamesWon, winRatio: p1_WinRatio},
       player2: {...this.state.player2, gamesWon: p2_GamesWon, winRatio: p2_WinRatio},
     })
